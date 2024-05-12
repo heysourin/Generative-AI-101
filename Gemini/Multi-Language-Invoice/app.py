@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from PIL import Image
 
+
 load_dotenv()
 
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
@@ -13,9 +14,12 @@ model = genai.GenerativeModel('gemini-pro-vision')
 
 
 def get_gemini_response(input, image, prompt):
-    response = model.generate_content([input, image[0], prompt])
-    return response.text
-
+    try:
+        response = model.generate_content([input, image[0], prompt])
+        return response.text
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        return "Failed to process the request."
 
 def input_image_details(uploaded_file):
     if uploaded_file is not None:
